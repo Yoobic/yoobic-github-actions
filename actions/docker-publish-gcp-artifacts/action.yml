@@ -29,6 +29,10 @@ inputs:
     required: false
     description: 'The name of the artifact registry'
     default: yoobic-docker-images
+  path_to_package_json:
+    required: false
+    description: 'The path to the package.json file'
+    default: ./package.json
 
 runs:
   using: 'composite'
@@ -37,7 +41,7 @@ runs:
       if: ${{ !inputs.image }}
       uses: notiz-dev/github-action-json-property@release
       with:
-        path: './package.json'
+        path: ${{ inputs.path_to_package_json }}
         prop_path: 'name'
 
     - if: ${{ !inputs.image }}
@@ -56,6 +60,8 @@ runs:
     - name: Get current version of the package
       id: package-version
       uses: martinbeentjes/npm-get-version-action@master
+      with:
+        path: ${{ inputs.path_to_package_json }}
 
     - name: Authorize docker cli
       shell: bash
