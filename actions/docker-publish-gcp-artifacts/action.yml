@@ -81,9 +81,9 @@ runs:
         images: |
           ${{ inputs.region }}-docker.pkg.dev/${{ steps.auth.outputs.project_id }}/${{ inputs.registry }}/${{ env.dockerImageName }}
         tags: |
-          type=ref,event=tag
           type=ref,event=branch
           type=raw,value=github-{{sha}}
+          type=raw,value=${{ steps.package-version.outputs.current-version }}
         flavor: |
           latest=true
           prefix=
