@@ -41,7 +41,7 @@ runs:
       if: ${{ !inputs.image }}
       uses: notiz-dev/github-action-json-property@release
       with:
-        path: ${{ inputs.path_to_package_json }}
+        path: '${{ inputs.path_to_package_json }}/package.json'
         prop_path: 'name'
 
     - if: ${{ !inputs.image }}
