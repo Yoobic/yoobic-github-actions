@@ -83,7 +83,7 @@ runs:
         tags: |
           type=ref,event=branch
           type=raw,value=github-{{sha}}
-          type=raw,value=${{ steps.package-version.outputs.current-version }}
+          type=raw,value='v${{ steps.package-version.outputs.current-version }}'
         flavor: |
           latest=true
           prefix=
