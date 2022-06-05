@@ -32,7 +32,7 @@ inputs:
   path_to_package_json:
     required: false
     description: 'The path to the package.json file'
-    default: ./package.json
+    default: .
 
 runs:
   using: 'composite'
