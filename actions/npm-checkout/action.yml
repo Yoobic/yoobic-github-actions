@@ -31,14 +31,14 @@ runs:
   steps:
     - name: Checkout master
       if: ${{ inputs.include_master == 'true' }}
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         fetch-depth: ${{ inputs.fetch-depth }}
         token: ${{ inputs.token }}
         ref: master
 
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         fetch-depth: ${{ inputs.fetch-depth }}
         token: ${{ inputs.token }}
@@ -51,21 +51,14 @@ runs:
         credentials_json: ${{ inputs.gcp_credentials }}
 
     - name: Setting up the execution env
-      uses: actions/setup-node@v2
+      uses: actions/setup-node@v3
       with:
         node-version-file: '.nvmrc'
         cache: 'npm'
 
-    - name: Cache dependencies
-      id: cache-dependencies
-      uses: actions/cache@v2
-      with:
-        path: ./node_modules
-        #key: modules-
-        key: modules-${{ hashFiles('package-lock.json') }}
-        #restore-keys: modules-
-
     - name: Cache pulumi
+      env:
+          cache-name: cache-pulumi
       id: cache-pulumi
       uses: actions/cache@v2
       with:
@@ -73,6 +66,7 @@ runs:
         #key: pulumi-
         key: pulumi-${{ hashFiles('package-lock.json') }}
         #restore-keys: pulumi-
+
     - name: Cache eslint
       id: cache-eslint
       uses: actions/cache@v2
@@ -87,7 +81,7 @@ runs:
       shell: bash
 
     - name: Install dependencies
-      if: ${{ steps.cache-dependencies.outputs.cache-hit != 'true' && inputs.install == 'true' }}
+      if: ${{ inputs.install == 'true' }}
       run: npm install # ci --ignore-script
       shell: bash
 
