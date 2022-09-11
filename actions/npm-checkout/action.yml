@@ -66,18 +66,22 @@ runs:
       shell: bash
 
     - name: Cache dependencies
+      env:
+          cache-name: cache-node-modules
       id: cache-dependencies
       uses: actions/cache@v3
       with:
         path: ${{ steps.npm-cache-dir.outputs.dir }}
-        key: modules-${{ hashFiles('package-lock.cache.json') }}
+        key: modules-${{ env.GITHUB_ACTION_REPOSITORY }}${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('package-lock.cache.json') }}
 
     - name: Cache pulumi
+      env:
+          cache-name: cache-pulumi
       id: cache-pulumi
       uses: actions/cache@v2
       with:
         path: ~/.pulumi
-        key: pulumi-${{ hashFiles('package-lock.cache.json') }}
+        key: pulumi-${{env.GITHUB_ACTION_REPOSITORY}}-${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('package-lock.cache.json') }}
 
     - name: Cache eslint
       id: cache-eslint
