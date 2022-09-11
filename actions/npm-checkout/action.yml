@@ -56,10 +56,6 @@ runs:
         node-version-file: '.nvmrc'
         cache: 'npm'
 
-    - name: Create cache package file
-      run: cp package-lock.json package-lock.cache.json && sed -i 1,3d package-lock.cache.json
-      shell: bash
-
 
     - name: Cache pulumi
       env:
