@@ -56,7 +56,6 @@ runs:
         node-version-file: '.nvmrc'
         cache: 'npm'
 
-
     - name: Cache pulumi
       env:
           cache-name: cache-pulumi
@@ -64,7 +63,9 @@ runs:
       uses: actions/cache@v2
       with:
         path: ~/.pulumi
-        key: pulumi-${{env.GITHUB_ACTION_REPOSITORY}}-${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('package-lock.cache.json') }}
+        #key: pulumi-
+        key: pulumi-${{ hashFiles('package-lock.json') }}
+        #restore-keys: pulumi-
 
     - name: Cache eslint
       id: cache-eslint
