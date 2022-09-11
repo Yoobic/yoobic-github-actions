@@ -31,7 +31,7 @@ runs:
   steps:
     - name: Checkout master
       if: ${{ inputs.include_master == 'true' }}
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         fetch-depth: ${{ inputs.fetch-depth }}
         token: ${{ inputs.token }}
@@ -51,28 +51,23 @@ runs:
         credentials_json: ${{ inputs.gcp_credentials }}
 
     - name: Setting up the execution env
-      uses: actions/setup-node@v2
+      uses: actions/setup-node@v3
       with:
         node-version-file: '.nvmrc'
         cache: 'npm'
-
-    - name: Get npm cache directory
-      id: npm-cache-dir 
-      run: echo "::set-output name=dir::$(npm config get cache)"
-      shell: bash
 
     - name: Create cache package file
       run: cp package-lock.json package-lock.cache.json && sed -i 1,3d package-lock.cache.json
       shell: bash
 
-    - name: Cache dependencies
-      env:
-          cache-name: cache-node-modules
-      id: cache-dependencies
-      uses: actions/cache@v3
-      with:
-        path: ${{ steps.npm-cache-dir.outputs.dir }}
-        key: modules-${{ env.GITHUB_ACTION_REPOSITORY }}${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('package-lock.cache.json') }}
+    #- name: Cache dependencies
+    # env:
+    #     cache-name: cache-node-modules
+    # id: cache-dependencies
+    # uses: actions/cache@v3
+    # with:
+    #   path: ~/ 
+    #   key: modules-${{ env.GITHUB_ACTION_REPOSITORY }}${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('package-lock.cache.json') }}
 
     - name: Cache pulumi
       env:
@@ -97,7 +92,7 @@ runs:
       shell: bash
 
     - name: Install dependencies
-      if: ${{ steps.cache-dependencies.outputs.cache-hit != 'true' && inputs.install == 'true' }}
+      if: ${{ inputs.install == 'true' }}
       run: npm install # ci --ignore-script
       shell: bash
 
