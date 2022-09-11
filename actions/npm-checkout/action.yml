@@ -56,23 +56,28 @@ runs:
         node-version-file: '.nvmrc'
         cache: 'npm'
 
+    - name: Get npm cache directory
+      id: npm-cache-dir 
+      run: echo "::set-output name=dir::$(npm config get cache)"
+      shell: bash
+
+    - name: Create cache package file
+      run: cp package-lock.json package-lock.cache.json && sed -i 1,3d package-lock.cache.json
+      shell: bash
+
     - name: Cache dependencies
       id: cache-dependencies
-      uses: actions/cache@v2
+      uses: actions/cache@v3
       with:
-        path: ./node_modules
-        #key: modules-
-        key: modules-${{ hashFiles('package-lock.json') }}
-        #restore-keys: modules-
+        path: ${{ steps.npm-cache-dir.outputs.dir }}
+        key: modules-${{ hashFiles('package-lock.cache.json') }}
 
     - name: Cache pulumi
       id: cache-pulumi
       uses: actions/cache@v2
       with:
         path: ~/.pulumi
-        #key: pulumi-
-        key: pulumi-${{ hashFiles('package-lock.json') }}
-        #restore-keys: pulumi-
+        key: pulumi-${{ hashFiles('package-lock.cache.json') }}
 
     - name: Cache eslint
       id: cache-eslint
