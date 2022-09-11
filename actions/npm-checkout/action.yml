@@ -77,7 +77,7 @@ runs:
       uses: actions/cache@v2
       with:
         path: ~/.pulumi
-        key: modules-${{ hashFiles('package-lock.cache.json') }}
+        key: pulumi-${{ hashFiles('package-lock.cache.json') }}
 
     - name: Cache eslint
       id: cache-eslint
