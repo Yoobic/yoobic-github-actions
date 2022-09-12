@@ -95,7 +95,7 @@ runs:
       shell: bash
 
     - name: Install dependencies
-      if: ${{ steps.cache-node.outputs.cache-hit != 'true' inputs.install == 'true' }}
+      if: ${{ steps.cache-node.outputs.cache-hit != 'true' && inputs.install == 'true' }}
       run: npm install 
       shell: bash
 
