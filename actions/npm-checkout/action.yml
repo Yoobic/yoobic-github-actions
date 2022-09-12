@@ -63,7 +63,7 @@ runs:
 
     - name: List packages before npm install
       shell: bash
-      run: ls 'npm root' 
+      run: ls `npm root`
 
 
     - name: Cache pulumi
