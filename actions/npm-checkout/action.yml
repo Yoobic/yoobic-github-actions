@@ -56,31 +56,38 @@ runs:
       with:
         node-version-file: '.nvmrc'
 
+    - name: Print env
+      shell: bash
+      run: echo ${{ env.GITHUB_REF_NAME }}
+
     - name: Cache node modules
       id: cache-node
       uses: actions/cache@v3
       with:
         path: ./node_modules
-        key: node_modules_cache  
+        key:  node_modules-${{ env.GITHUB_REF_NAME }}-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          node_modules-${{ env.GITHUB_REF_NAME }}-
+          node_modules-
 
     - name: List packages before npm install
       shell: sh
       run: if [ -d node_modules ]; then ls `npm root`; fi
 
-    - name: Cache pulumi
-      id: cache-pulumi
-      uses: actions/cache@v3
-      with:
-        path: ~/.pulumi
-        key: pulumi-${{ hashFiles('package-lock.json') }}
+        #- name: Cache pulumi
+        #id: cache-pulumi
+        #uses: actions/cache@v3
+        #with:
+        #path: ~/.pulumi
+        #key: pulumi-${{ hashFiles('package-lock.json') }}
 
-    - name: Cache eslint
-      id: cache-eslint
-      uses: actions/cache@v3
-      with:
-        path: ./.eslintcache
-        key: eslint-
-        restore-keys: eslint-
+        #- name: Cache eslint
+        #id: cache-eslint
+        #uses: actions/cache@v3
+        #with:
+        #path: ./.eslintcache
+        #key: eslint-
+        #restore-keys: eslint-
 
     - name: Configure gcp artifact
       if: ${{ inputs.gcp_credentials }}
