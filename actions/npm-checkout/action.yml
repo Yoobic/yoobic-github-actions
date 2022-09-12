@@ -60,7 +60,7 @@ runs:
       id: cache-node
       uses: actions/cache@v3
       with:
-        path: ~/node_modules
+        path: ./node_modules
         key: node_modules_cache  
 
     - name: List packages before npm install
