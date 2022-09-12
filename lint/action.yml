@@ -1,0 +1,34 @@
+
+name: 'Lint'
+description: 'This action runs the lint command and saves the eslint cache. Make sure to run it after the checkout'
+author: 'yoobic'
+inputs:
+  package_manager:
+    required: false
+    description: 'npm or yarn' 
+    default: 'npm'
+runs:
+  using: 'composite'
+  steps:
+
+    - name: Cache lint
+      id: cache-lint
+      uses: actions/cache@v3
+      with:
+        path: ./.eslintcache
+        key:  eslintcache-${{ github.ref_name }}
+        restore-keys: |
+          eslintcache-${{ env.GITHUB_REF_NAME }}-
+          eslintcache-master-
+          eslintcache-main
+          eslintcache-
+
+    - name: Run npm lint
+      if: ${{ inputs.package_manager == 'npm' }}
+      run: npm run lint 
+      shell: bash
+
+    - name: Run yarn lint
+      if: ${{ inputs.package_manager == 'yarn' }}
+      run: yarn lint 
+      shell: bash
