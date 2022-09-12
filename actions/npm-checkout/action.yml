@@ -57,9 +57,14 @@ runs:
         node-version-file: '.nvmrc'
         cache: 'npm'
 
+    - name: What is npm root 
+      shell: bash
+      run: npm root
+
     - name: List packages before npm install
       shell: bash
-      run: npm list > stdout
+      run: ls 'npm root' 
+
 
     - name: Cache pulumi
       id: cache-pulumi
