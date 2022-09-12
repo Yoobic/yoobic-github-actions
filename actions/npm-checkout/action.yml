@@ -62,7 +62,7 @@ runs:
       run: npm root
 
     - name: List packages before npm install
-      shell: bash
+      shell: sh
       run: ls /home/runner/work/cache/cache/node_modules 2>/dev/null
 
 
