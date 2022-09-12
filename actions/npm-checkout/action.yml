@@ -55,15 +55,17 @@ runs:
       uses: actions/setup-node@v3
       with:
         node-version-file: '.nvmrc'
-        cache: 'npm'
 
-    - name: What is npm root 
-      shell: bash
-      run: npm root
+    - name: Cache node modules
+      id: cache-node
+      uses: actions/cache@v3
+      with:
+        path: ~/node_modules
+        key: node_modules_cache  
 
     - name: List packages before npm install
       shell: sh
-      run: if [ -d `npm root` ]; then ls `npm root`; fi
+      run: if [ -d node_modules ]; then ls `npm root`; fi
 
     - name: Cache pulumi
       id: cache-pulumi
@@ -87,7 +89,7 @@ runs:
 
     - name: Install dependencies
       if: ${{ inputs.install == 'true' }}
-      run: npm ci
+      run: npm install 
       shell: bash
 
     - name: List packages after npm install
