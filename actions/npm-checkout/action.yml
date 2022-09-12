@@ -64,7 +64,7 @@ runs:
         path: ./node_modules
         key:  node_modules-${{ github.ref_name }}-${{ hashFiles('**/package-lock.json') }}
         restore-keys: |
-          node_modules-${{ env.GITHUB_REF_NAME }}-
+          node_modules-${{ github.ref_name  }}-
           node_modules-master-
           node_modules-main
           node_modules-

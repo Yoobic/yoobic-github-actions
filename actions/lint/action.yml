@@ -18,7 +18,7 @@ runs:
         path: ./.eslintcache
         key:  eslintcache-${{ github.ref_name }}
         restore-keys: |
-          eslintcache-${{ env.GITHUB_REF_NAME }}-
+          eslintcache-${{ github.ref_name }}-
           eslintcache-master-
           eslintcache-main
           eslintcache-
