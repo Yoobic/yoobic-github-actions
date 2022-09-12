@@ -43,7 +43,8 @@ runs:
         fetch-depth: ${{ inputs.fetch-depth }}
         token: ${{ inputs.token }}
         persist-credentials: false
-
+    
+      
     - name: Google authentication
       uses: google-github-actions/auth@v0.4.0
       if: ${{ inputs.gcp_credentials }}
@@ -55,6 +56,10 @@ runs:
       with:
         node-version-file: '.nvmrc'
         cache: 'npm'
+
+    - name: List packages before npm install
+      shell: bash
+      run: npm list
 
     - name: Cache pulumi
       id: cache-pulumi
@@ -80,6 +85,10 @@ runs:
       if: ${{ inputs.install == 'true' }}
       run: npm ci
       shell: bash
+
+    - name: List packages after npm install
+      shell: bash
+      run: npm list
 
     - name: Build
       if: ${{ inputs.build == 'true' }}
