@@ -59,7 +59,7 @@ runs:
 
     - name: List packages before npm install
       shell: bash
-      run: npm list
+      run: npm list > stdout
 
     - name: Cache pulumi
       id: cache-pulumi
