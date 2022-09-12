@@ -63,10 +63,7 @@ runs:
 
     - name: List packages before npm install
       shell: sh
-      run: | 
-        if [ -d `npm root` ]; then \
-              ls `npm root` \
-        fi
+      run: if [ -d `npm root` ]; then ls `npm root`; fi
 
     - name: Cache pulumi
       id: cache-pulumi
