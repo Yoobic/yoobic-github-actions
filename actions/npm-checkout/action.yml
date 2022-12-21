@@ -62,7 +62,7 @@ runs:
       uses: actions/cache@v3
       with:
         path: ./node_modules
-        key:  node_modules-${{ github.ref_name }}-${{ hashFiles('**/package-lock.json') }}
+        key:  node_modules-${{ github.ref_name }}-${{ hashFiles('./package-lock.json') }}
         restore-keys: |
           node_modules-${{ github.ref_name  }}-
           node_modules-master-
