@@ -29,6 +29,14 @@ inputs:
     required: false
     description: 'The name of the artifact registry'
     default: yoobic-docker-images
+  release:
+    required: false
+    description: 'If true, the image will be tagged as release. If false you want to specify the flag.'
+    default: 'true'
+  tag:
+    required: false
+    description: 'Additional tag of the image. IS required if release is false.'
+
   path_to_package_json:
     required: false
     description: 'The path to the package.json file'
@@ -76,6 +84,7 @@ runs:
 
     - name: Docker meta
       id: meta
+      if: ${{ inputs.release == 'true' }}
       uses: docker/metadata-action@v3
       with:
         images: |
@@ -86,6 +95,21 @@ runs:
           type=raw,value=v${{ steps.package-version.outputs.current-version }}
         flavor: |
           latest=true
+          prefix=
+          suffix=
+    - name: Docker meta
+      id: meta
+      if: ${{ inputs.release == 'false' }}
+      uses: docker/metadata-action@v3
+      with:
+        images: |
+          ${{ inputs.region }}-docker.pkg.dev/${{ steps.auth.outputs.project_id }}/${{ inputs.registry }}/${{ env.dockerImageName }}
+        tags: |
+          type=ref,event=branch
+          type=raw,value=github-{{sha}}
+          type=raw,value=${{ inputs.tag }} 
+        flavor: |
+          latest=false
           prefix=
           suffix=
 
