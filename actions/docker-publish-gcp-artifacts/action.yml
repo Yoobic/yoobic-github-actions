@@ -29,17 +29,6 @@ inputs:
     required: false
     description: 'The name of the artifact registry'
     default: yoobic-docker-images
-  release:
-    required: false
-    description: 'If true, the image will be tagged as release. If false you want to specify the flag.'
-    default: 'true'
-  latest: 
-    required: false
-    description: 'If true, the image will be tagged as latest. If false you want to specify the flag.'
-    default: 'true'
-  tag:
-    required: false
-    description: 'Additional tag of the image. IS required if release is false.'
   path_to_package_json:
     required: false
     description: 'The path to the package.json file'
@@ -85,12 +74,8 @@ runs:
       env:
         GCP_KEY: ${{ inputs.gcp_credentials }}
 
-    - shell: bash
-      run: echo ${{ inputs.release == 'true' && format('v{0}', steps.package-version.outputs.current-version) || format(inputs.tag)  }}
-
     - name: Docker meta
       id: meta
-      if: ${{ inputs.release == 'true' }}
       uses: docker/metadata-action@v3
       with:
         images: |
@@ -98,12 +83,12 @@ runs:
         tags: |
           type=ref,event=branch
           type=raw,value=github-{{sha}}
-          type=raw,value=${{ inputs.release == 'true' && format('v{0}', steps.package-version.outputs.current-version) || format(inputs.tag)  }}
+          type=raw,value=v${{ steps.package-version.outputs.current-version }}
         flavor: |
-          latest=${{ inputs.latest }}
+          latest=true
           prefix=
           suffix=
-    
+
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v1
 
