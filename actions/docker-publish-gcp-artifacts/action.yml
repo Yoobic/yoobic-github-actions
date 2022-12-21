@@ -98,7 +98,7 @@ runs:
         tags: |
           type=ref,event=branch
           type=raw,value=github-{{sha}}
-          type=raw,value=${{ inputs.release == 'true' ? 'v'+ steps.package-version.outputs.current-version : inputs.tag  }}
+          type=raw,value=${{ inputs.release == 'true' && 'v'+ steps.package-version.outputs.current-version || inputs.tag  }}
         flavor: |
           latest=${{ inputs.latest }}
           prefix=
