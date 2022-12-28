@@ -87,7 +87,7 @@ runs:
     - shell: bash 
       run: echo "AAAAAA"
     - shell: bash
-      run: echo ${{ inputs.release == 'true' && format('v{0}', steps.package-version.outputs.current-version) || format(inputs.tag)  }}
+      run: echo ${{ inputs.release == 'true' && format('v{0}', steps.package-version.outputs.current-version) || format('{0}', inputs.tag) }}
 
     - name: Docker meta
       id: meta
@@ -99,7 +99,7 @@ runs:
         tags: |
           type=ref,event=branch
           type=raw,value=github-{{sha}}
-          type=raw,value=${{ inputs.release == 'true' && format('v{0}', steps.package-version.outputs.current-version) || format(inputs.tag)  }}
+          type=raw,value=${{ inputs.release == 'true' && format('v{0}', steps.package-version.outputs.current-version) || format('{0}', inputs.tag)  }}
         flavor: |
           latest=${{ inputs.latest }}
           prefix=
