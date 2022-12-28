@@ -91,7 +91,6 @@ runs:
 
     - name: Docker meta
       id: meta
-      if: ${{ inputs.release == 'true' }}
       uses: docker/metadata-action@v3
       with:
         images: |
