@@ -17,6 +17,9 @@ inputs:
     required: false
     description: 'Include also master branch in order to do incremental test only on changes'
     default: 'false'
+  ref:
+    required: false
+    description: 'Replace ref'
   install:
     required: false
     description: 'If true will run npm install'
@@ -38,11 +41,21 @@ runs:
         ref: master
 
     - name: Checkout
+      if: ${{ !inputs.ref }}
       uses: actions/checkout@v3
       with:
         fetch-depth: ${{ inputs.fetch-depth }}
         token: ${{ inputs.token }}
         persist-credentials: false
+    
+    - name: Checkout
+      if: ${{ inputs.ref }}
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: ${{ inputs.fetch-depth }}
+        token: ${{ inputs.token }}
+        persist-credentials: false
+        ref: ${{ inputs.ref }}
     
       
     - name: Google authentication
