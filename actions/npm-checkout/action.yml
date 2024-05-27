@@ -28,6 +28,10 @@ inputs:
     required: false
     description: 'If true will run npm run build'
     default: 'true'
+  path:
+    required: false
+    description: 'Relative path under $GITHUB_WORKSPACE to place the repository'
+    default: ''
 
 runs:
   using: 'composite'
@@ -47,6 +51,7 @@ runs:
         fetch-depth: ${{ inputs.fetch-depth }}
         token: ${{ inputs.token }}
         persist-credentials: false
+        path: ${{ inputs.path }}
     
     - name: Checkout
       if: ${{ inputs.ref }}
@@ -56,6 +61,7 @@ runs:
         token: ${{ inputs.token }}
         persist-credentials: false
         ref: ${{ inputs.ref }}
+        path: ${{ inputs.path }}
     
       
     - name: Google authentication
