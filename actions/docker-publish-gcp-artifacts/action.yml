@@ -103,9 +103,7 @@ runs:
         file: ${{ inputs.docker_file }}
         builder: ${{ steps.buildx.outputs.name }}
         provenance: false
-        build-args: |
-          ${{ inputs.docker_build_args }}
-          GCP_KEY=${{ inputs.gcp_credentials }}
+        build-args: ${{ inputs.docker_build_args }}
         secret-files: |
           "GOOGLE_CREDENTIALS_SECRET_FILE=./google-credentials.json"
         push: true
