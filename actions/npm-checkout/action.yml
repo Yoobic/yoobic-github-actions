@@ -28,6 +28,10 @@ inputs:
     required: false
     description: 'If true will run npm run build'
     default: 'true'
+  path:
+    required: false
+    description: 'Relative path under $GITHUB_WORKSPACE to place the repository'
+    default: ''
 
 runs:
   using: 'composite'
@@ -47,6 +51,7 @@ runs:
         fetch-depth: ${{ inputs.fetch-depth }}
         token: ${{ inputs.token }}
         persist-credentials: false
+        path: ${{ inputs.path }}
     
     - name: Checkout
       if: ${{ inputs.ref }}
@@ -56,6 +61,7 @@ runs:
         token: ${{ inputs.token }}
         persist-credentials: false
         ref: ${{ inputs.ref }}
+        path: ${{ inputs.path }}
     
       
     - name: Google authentication
@@ -67,15 +73,13 @@ runs:
     - name: Setting up the execution env
       uses: actions/setup-node@v3
       with:
-        node-version-file: '.nvmrc'
-
-
+        node-version-file: ./${{ inputs.path }}/.nvmrc
     - name: Cache node_modules
       id: cache-node
       uses: actions/cache@v3
       with:
-        path: ./node_modules
-        key:  node_modules-${{ github.ref_name }}-${{ hashFiles('./package-lock.json') }}
+        path: ./${{ inputs.path }}/node_modules
+        key:  node_modules-${{ github.ref_name }}-${{ hashFiles(format('{0}/package-lock.json', inputs.path)) }}
         restore-keys: |
           node_modules-${{ github.ref_name  }}-
           node_modules-master-
@@ -86,14 +90,17 @@ runs:
       if: ${{ inputs.gcp_credentials }}
       run: npx google-artifactregistry-auth
       shell: bash
+      working-directory: ${{ inputs.path }}
 
     # We only skip the install path if there is an exact cache hit. If not we restored the not exact cahce so we run an npm install again
     - name: Install dependencies
       if: ${{ steps.cache-node.outputs.cache-hit != 'true' && inputs.install == 'true' }}
       run: npm install 
       shell: bash
+      working-directory: ${{ inputs.path }}
 
     - name: Build
       if: ${{ inputs.build == 'true' }}
       run: npm run build --if-present
       shell: bash
+      working-directory: ${{ inputs.path }}
