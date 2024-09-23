@@ -36,6 +36,10 @@ inputs:
     required: false
     description: 'The path to the package.json file'
     default: .
+  latest:
+    required: false
+    description: 'Latest tag mode'
+    default: "true"
 
 runs:
   using: 'composite'
@@ -89,7 +93,7 @@ runs:
           type=raw,value=v${{ steps.package-version.outputs.current-version }}
           type=raw,value=${{ inputs.additionalTag }}
         flavor: |
-          latest=true
+          latest=${{ inputs.latest }}
           prefix=
           suffix=
 
