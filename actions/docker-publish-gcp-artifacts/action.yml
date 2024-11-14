@@ -84,6 +84,10 @@ runs:
       env:
         GCP_KEY: ${{ inputs.gcp_credentials }}
 
+    - name: Check current commit
+      shell: bash
+      run: echo "current_commit=$(git rev-parse HEAD 2>/dev/null || echo ${{ github.sha }})" >> $GITHUB_ENV
+
     - name: Docker meta
       id: meta
       uses: docker/metadata-action@v3
@@ -92,7 +96,7 @@ runs:
           ${{ inputs.region }}-docker.pkg.dev/${{ steps.auth.outputs.project_id }}/${{ inputs.registry }}/${{ env.dockerImageName }}
         tags: |
           type=ref,event=branch
-          type=raw,value=github-{{sha}}
+          type=raw,value=github-${{ env.current_commit }}
           type=raw,value=v${{ steps.package-version.outputs.current-version }}
           type=raw,value=${{ inputs.additionalTag }}
         flavor: |
