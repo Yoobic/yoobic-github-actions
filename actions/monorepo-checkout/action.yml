@@ -68,7 +68,7 @@ runs:
 
     - name: Configure gcp artifact
       if: ${{ inputs.gcp_credentials }}
-      run: npx google-artifactregistry-auth
+      run: npx google-artifactregistry-auth@3.0.0
       shell: bash
 
     - name: Install dependencies
