@@ -28,6 +28,10 @@ inputs:
     required: false
     description: 'If true will run npm run build'
     default: 'true'
+  custom_npm_install:
+    required: false
+    description: 'Custom npm install command'
+    default: 'npm install'
 
 runs:
   using: 'composite'
@@ -90,7 +94,8 @@ runs:
     # We only skip the install path if there is an exact cache hit. If not we restored the not exact cahce so we run an npm install again
     - name: Install dependencies
       if: ${{ steps.cache-node.outputs.cache-hit != 'true' && inputs.install == 'true' }}
-      run: npm install 
+      # run: npm install 
+      run: ${{ inputs.custom_npm_install }}
       shell: bash
 
     - name: Build
