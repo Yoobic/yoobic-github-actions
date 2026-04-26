@@ -10,7 +10,7 @@ runs:
   using: 'composite'
   steps:
     - name: Google authentication
-      uses: google-github-actions/auth@v0.4.0
+      uses: google-github-actions/auth@a61909d048e0be579b6c15b27088d19668493851 # v0.4.0
       with:
         credentials_json: ${{ inputs.gcp_credentials }}
 

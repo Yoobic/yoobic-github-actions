@@ -36,7 +36,7 @@ runs:
 
     - name: Generating code cov
       if: ${{ inputs.mode == 'cov' }}
-      uses: ArtiomTr/jest-coverage-report-action@v2.0-rc.6
+      uses: ArtiomTr/jest-coverage-report-action@35fca4fae11c4934c4c8a561269dd09700410770 # v2.0-rc.6
       with:
         github-token: ${{ inputs.token}}
         skip-step: all
