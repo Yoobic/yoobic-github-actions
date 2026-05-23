@@ -11,8 +11,10 @@ runs:
     - name: Compare commit message to regex
       id: check-commit
       shell: bash
+      env:
+        COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
       run: |
         echo "match=false" >> "$GITHUB_OUTPUT"
-        if [[ '${{ github.event.head_commit.message }}' =~ ^chore.+[0-9].[0-9]+.[0-9]+$ ]]; then
+        if [[ "$COMMIT_MESSAGE" =~ ^chore.+[0-9].[0-9]+.[0-9]+$ ]]; then
             echo "match=true" >> "$GITHUB_OUTPUT"
         fi
