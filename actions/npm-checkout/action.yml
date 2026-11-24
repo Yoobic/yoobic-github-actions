@@ -32,6 +32,10 @@ inputs:
     required: false
     description: 'Custom npm install command'
     default: 'npm install'
+  npm_before:
+    required: false
+    description: 'npm package-age cutoff (YYYY-MM-DD) for the rest of the job. Empty = rolling 7 days ago unless npm_config_before is already set. none = do not set it'
+    default: ''
 
 runs:
   using: 'composite'
@@ -72,6 +76,26 @@ runs:
       uses: actions/setup-node@3235b876344d2a9aa001b8d1453c930bba69e610 # v3
       with:
         node-version-file: '.nvmrc'
+
+    # Do not install npm packages published in the last 7 days (YOOB-6346). Kept for the rest of the job via GITHUB_ENV
+    - name: Set npm package-age cutoff
+      env:
+        NPM_BEFORE: ${{ inputs.npm_before }}
+      run: |
+        if [ "$NPM_BEFORE" = "none" ]; then
+          echo "npm package-age cutoff not set by this action (npm_before=none)"
+          exit 0
+        fi
+        if [ -n "$NPM_BEFORE" ]; then
+          CUTOFF="$NPM_BEFORE"
+        elif [ -n "${npm_config_before:-}" ]; then
+          CUTOFF="$npm_config_before"
+        else
+          CUTOFF="$(date -u -d '7 days ago' +%F)"
+        fi
+        echo "npm_config_before=$CUTOFF" >> "$GITHUB_ENV"
+        echo "npm package-age cutoff: npm_config_before=$CUTOFF"
+      shell: bash
 
 
     - name: Cache node_modules
